@@ -18,9 +18,12 @@ async def get_ip(ip: str, key: Optional[str] = None):
             api = Shodan(key)
             res = api.host(ip)
             return {
-                "IP": res["ip_str"],
-                "Organization": res["org"],
-                "Country": res["country_name"],
+                #"IP": res["ip_str"],
+                #"Organization": res["org"],
+                #"Country": res["country_name"],
+                "latitude": res["lat"],
+                "longitude": res["long"],
+
             }
         except Exception as e:
             return {"Error": str(e)}
