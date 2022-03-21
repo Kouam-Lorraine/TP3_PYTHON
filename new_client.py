@@ -20,11 +20,24 @@ class MainWindow(QWidget):
     def initUI(self):
         self.setWindowTitle("Client")
         self.setFixedSize(400, 400)
-        self.label1 = QLabel("Enter your host IP:", self)
+        self.label1 = QLabel("Enter your hostname:", self)
         self.text = QLineEdit(self)
         self.text.move(10, 30)
         self.label2 = QLabel("Answer:", self)
         self.label2.move(10, 60)
+
+        self.label3 = QLabel("Enter your api key:", self)
+        self.text = QLineEdit(self)
+        self.text.move(10, 30)
+        self.label4 = QLabel("Answer:", self)
+        self.label4.move(10, 60)
+
+        self.label5 = QLabel("Enter the IP of site to geolocate:", self)
+        self.text = QLineEdit(self)
+        self.text.move(10, 30)
+        self.label6 = QLabel("Answer:", self)
+        self.label6.move(10, 60)
+
         self.button = QPushButton("Send", self)
         self.button.move(10, 90)
 
@@ -35,6 +48,8 @@ class MainWindow(QWidget):
 
     def on_click(self):
         hostname = self.text.text()
+        api_key = self.text.text()
+        ip = self.text.text()
 
         if hostname == "":
             QMessageBox.about(self, "Error", "Please fill the field")
@@ -45,9 +60,28 @@ class MainWindow(QWidget):
                 self.label2.adjustSize()
                 self.show()
 
-    def __query(self, hostname):
-        url = "http://%s" % (hostname)
+        if api_key == "":
+            QMessageBox.about(self, "Error", "Please fill the field")
+        else:
+            res = self.__query(api_key)
+            if res:
+                self.label3.setText("Answer%s" % (res["Hello"]))
+                self.label3.adjustSize()
+                self.show()
+
+        if ip == "":
+            QMessageBox.about(self, "Error", "Please fill the field")
+        else:
+            res = self.__query(ip)
+            if res:
+                self.label5.setText("Answer%s" % (res["Hello"]))
+                self.label5.adjustSize()
+                self.show()
+
+    def __query(self, hostname, api_key, ip):
+        url = "http://hostname=%sapi_key=%sip=%s" % (hostname,api_key,ip)
         r = requests.get(url)
+        print(r.content[:1000])
         if r.status_code == requests.codes.NOT_FOUND:
             QMessageBox.about(self, "Error", "IP not found")
         if r.status_code == requests.codes.OK:
