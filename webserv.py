@@ -21,8 +21,8 @@ async def get_ip(ip: str, key: Optional[str] = None):
                 #"IP": res["ip_str"],
                 #"Organization": res["org"],
                 #"Country": res["country_name"],
-                "latitude": res["lat"],
-                "longitude": res["long"],
+                "lat": res["latitude"],
+                "long": res["longitude"],
 
             }
         except Exception as e:
