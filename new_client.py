@@ -54,19 +54,19 @@ class MainWindow(QWidget):
         api_key = self.text2.text()
         ip = self.text3.text()
 
-        if hostname == "" or api_key == "" or ip == "":
+        if hostname == "":
             QMessageBox.about(self, "Error", "Please fill the field")
         else:
             res = self.__query(hostname, api_key, ip)
             if res:
-                self.label4.setText("Answer %s %s" % (res["lat"],res["long"]))
+                self.label4.setText("Answer: %s %s" % (res["lat"],res["long"]))
                 self.label4.adjustSize()
                 self.show()
                 url2 = "https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=12" % (res["lat"],res["long"])
                 wb.open_new_tab(url2)
 
     def __query(self, hostname, api_key, ip):
-        url = "http://hostname=%sapi_key=%sip=%s" % (hostname,api_key,ip)
+        url = "http://%s/ip/%s?key=%s" % (ip,hostname,api_key)
         r = requests.get(url)
         if r.status_code == requests.codes.NOT_FOUND:
             QMessageBox.about(self, "Error", "IP not found")
